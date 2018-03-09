@@ -4,12 +4,12 @@
     <artifactId>ninja-lite</artifactId>
     <name>ninja-lite</name>
     <packaging>jar</packaging>
-    <version>6.2.2-SNAPSHOT</version>
+    <version>6.2.2</version>
 
     <parent>
         <groupId>com.fizzed</groupId>
         <artifactId>ninja-plus</artifactId>
-        <version>6.2.2-SNAPSHOT</version>
+        <version>6.2.2</version>
     </parent>
     
     <dependencies>
