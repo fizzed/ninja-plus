@@ -27,10 +27,18 @@
 
     <modules>
         <module>ninja-lite</module>
+        <module>ninja-executors</module>
+        <module>ninja-executors-demo</module>
     </modules>
 
     <dependencyManagement>
         <dependencies>
+            
+            <dependency>
+                <groupId>com.fizzed</groupId>
+                <artifactId>ninja-executors</artifactId>
+                <version>${project.version}</version>
+            </dependency>
             
             <dependency>
                 <groupId>org.ninjaframework</groupId>
@@ -127,6 +135,25 @@
                 <version>${ninja-rocker.version}</version>
             </dependency>-->
 
+            <dependency>
+                <groupId>org.hamcrest</groupId>
+                <artifactId>java-hamcrest</artifactId>
+                <version>2.0.0.0</version>
+            </dependency>
+
+            <dependency>
+                <groupId>junit</groupId>
+                <artifactId>junit</artifactId>
+                <version>4.12</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.mockito</groupId>
+                <artifactId>mockito-core</artifactId>
+                <version>2.15.0</version>
+            </dependency>
+
         </dependencies>
     </dependencyManagement>
+    
 </project>
