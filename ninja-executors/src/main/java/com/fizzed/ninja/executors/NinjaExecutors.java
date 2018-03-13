@@ -98,7 +98,7 @@ abstract public class NinjaExecutors implements UncaughtExceptionHandler {
             this.threads, new ThreadFactoryBuilder()
                 .setDaemon(true)
                 .setNameFormat(this.getName() + "-%d")
-                .setUncaughtExceptionHandler(this)
+                .setUncaughtExceptionHandler(NinjaExecutors.this)
                 .build());
         
         this.postStart();
@@ -159,7 +159,8 @@ abstract public class NinjaExecutors implements UncaughtExceptionHandler {
     
     @Override
     public void uncaughtException(Thread thread, Throwable e) {
-        log.error("{} had thread {} with an uncaught exception", thread.getName(), e);
+        log.error("{} with uncaught exception in thread {}",
+            this.getName(), thread.getName(), e);
     }
 
 }

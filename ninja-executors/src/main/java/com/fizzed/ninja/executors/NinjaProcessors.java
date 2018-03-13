@@ -22,6 +22,8 @@ abstract public class NinjaProcessors extends NinjaExecutors {
         public void run() {
             try {
                 this.executor.run();
+            } catch (Exception e) {
+                NinjaProcessors.this.uncaughtException(Thread.currentThread(), e);
             } finally {
                 processors.remove(this.identifier);
             }
