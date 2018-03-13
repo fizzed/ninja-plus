@@ -24,6 +24,7 @@ import org.slf4j.LoggerFactory;
 abstract public class NinjaExecutors implements UncaughtExceptionHandler {
 
     protected final Injector injector;
+    protected final NinjaProperties ninjaProperties;
     protected final Logger log = LoggerFactory.getLogger(this.getClass());
     protected final boolean enabled;
     protected final int threads;
@@ -35,7 +36,7 @@ abstract public class NinjaExecutors implements UncaughtExceptionHandler {
             Injector injector) {
         
         this.injector = injector;
-        NinjaProperties ninjaProperties = injector.getInstance(NinjaProperties.class);
+        this.ninjaProperties = injector.getInstance(NinjaProperties.class);
         this.enabled = ninjaProperties.getBooleanWithDefault(
             this.getConfigKey("enabled"), Boolean.TRUE);
         this.threads = ninjaProperties.getIntegerWithDefault(

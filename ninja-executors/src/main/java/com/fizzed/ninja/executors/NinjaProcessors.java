@@ -8,38 +8,21 @@ import java.util.concurrent.atomic.AtomicLong;
 
 abstract public class NinjaProcessors extends NinjaExecutors {
 
-    private class WrappedNinjaExecutor implements Runnable {
-        
-        private final Long identifier;
-        private final NinjaExecutor executor;
-
-        public WrappedNinjaExecutor(Long identifier, NinjaExecutor executor) {
-            this.identifier = identifier;
-            this.executor = executor;
-        }
-
-        @Override
-        public void run() {
-            try {
-                this.executor.run();
-            } catch (Throwable t) {
-                NinjaProcessors.this.uncaughtException(Thread.currentThread(), t);
-            } finally {
-                processors.remove(this.identifier);
-            }
-        }
-
-    }
     
     private final AtomicLong identifiers;
-    private final ConcurrentHashMap<Long,WrappedNinjaExecutor> processors;
+    final ConcurrentHashMap<Long,NinjaProcessor> processors;
+    protected final long restartTimeout;
     
     public NinjaProcessors(Injector injector) {
         super(injector);
         this.identifiers = new AtomicLong();
         this.processors = new ConcurrentHashMap<>();
+        this.restartTimeout = ninjaProperties.getIntegerWithDefault(
+            this.getConfigKey("restart_timeout"), 3000);
     }
 
+    public Collection<
+    
     abstract public Class<? extends NinjaExecutor> getExecutorClass();
     
     protected void createProcessor() {
@@ -47,7 +30,7 @@ abstract public class NinjaProcessors extends NinjaExecutors {
         final Long identifier = identifiers.incrementAndGet();
         final NinjaExecutor executor = this.injector.getInstance(executorClass);
         // wrap it so we can monitor when it finishes
-        final WrappedNinjaExecutor  wrappedExecutor = new WrappedNinjaExecutor(identifier, executor);
+        final NinjaProcessor  wrappedExecutor = new NinjaProcessor(identifier, executor, this);
         this.processors.put(identifier, wrappedExecutor);
         this.executors.submit(wrappedExecutor);
     }
@@ -61,10 +44,10 @@ abstract public class NinjaProcessors extends NinjaExecutors {
     
     @Override
     protected void stopCurrentTasks() {
-        List<WrappedNinjaExecutor> wrappedExecutors = new ArrayList<>(this.processors.values());
+        List<NinjaProcessor> wrappedExecutors = new ArrayList<>(this.processors.values());
         wrappedExecutors.forEach(wrappedExecutor -> {
             wrappedExecutor.executor.shutdown();
         });
     }
-    
+
 }
