@@ -4,7 +4,7 @@
     <artifactId>ninja-plus</artifactId>
     <name>ninja-plus</name>
     <packaging>pom</packaging>
-    <version>6.2.3-SNAPSHOT</version>
+    <version>6.2.2-1</version>
 
     <parent>
         <groupId>com.fizzed</groupId>
@@ -15,7 +15,7 @@
     <scm>
         <url>https://github.com/fizzed/ninja-plus</url>
         <connection>scm:git:git@github.com:fizzed/ninja-plus.git</connection>
-        <tag>HEAD</tag>
+        <tag>v6.2.2-1</tag>
     </scm>
 
     <properties>
