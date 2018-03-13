@@ -29,11 +29,6 @@ public class RuntimeExceptionThrowers extends NinjaProcessors {
     }
 
     @Override
-    public String getName() {
-        return "RuntimeExceptionThrower";
-    }
-
-    @Override
     public String getConfigPrefix() {
         return "ret";
     }

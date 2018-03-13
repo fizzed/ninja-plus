@@ -21,6 +21,11 @@ abstract public class NinjaProcessors extends NinjaExecutors {
             this.getConfigKey("restart_delay"), 3000);
     }
 
+    @Override
+    public String getName() {
+        return this.getRunnableClass().getSimpleName();
+    }
+    
     abstract public Class<? extends Runnable> getRunnableClass();
     
     protected NinjaProcessor createProcessor(long delayMillis) {

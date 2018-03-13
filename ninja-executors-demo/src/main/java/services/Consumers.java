@@ -29,11 +29,6 @@ public class Consumers extends NinjaProcessors {
     }
 
     @Override
-    public String getName() {
-        return "Consumer";
-    }
-
-    @Override
     public String getConfigPrefix() {
         return "consumer";
     }
