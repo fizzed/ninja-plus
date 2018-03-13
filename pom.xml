@@ -41,6 +41,12 @@
             </dependency>
             
             <dependency>
+                <groupId>com.fizzed</groupId>
+                <artifactId>ninja-lite</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            
+            <dependency>
                 <groupId>org.ninjaframework</groupId>
                 <artifactId>ninja-core</artifactId>
                 <version>${ninja.version}</version>
@@ -84,12 +90,6 @@
                 </exclusions>
             </dependency>
 
-            <dependency>
-                <groupId>com.fizzed</groupId>
-                <artifactId>ninja-lite</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            
             <dependency>
                 <groupId>org.ninjaframework</groupId>
                 <artifactId>ninja-standalone</artifactId>
