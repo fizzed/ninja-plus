@@ -24,6 +24,12 @@
             <scope>provided</scope>
         </dependency>
         
+        <dependency>
+            <groupId>com.fizzed</groupId>
+            <artifactId>crux-util</artifactId>
+            <version>0.23.0</version>
+        </dependency>
+        
         <!-- testing -->
 
         <dependency>

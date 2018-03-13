@@ -1,9 +1,9 @@
 package conf;
 
-import com.greenback.cassandra.ninja.NinjaCassandraModule;
 import ninja.conf.FrameworkModule;
 import ninja.conf.NinjaClassicModule;
 import ninja.utils.NinjaProperties;
+import services.Consumers;
 
 public class Module extends FrameworkModule {
 
@@ -20,7 +20,7 @@ public class Module extends FrameworkModule {
             .xml(false)
             .jpa(false)
             .cache(false));
-        install(new NinjaCassandraModule());
+        bind(Consumers.class);
     }
 
 }

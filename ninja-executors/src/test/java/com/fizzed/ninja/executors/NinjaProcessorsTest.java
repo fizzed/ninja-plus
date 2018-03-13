@@ -1,18 +1,17 @@
-package com.greenback.cassandra.ninja;
+package com.fizzed.ninja.executors;
 
 import ninja.utils.NinjaProperties;
 import org.junit.Before;
-import static org.mockito.Mockito.mock;
 
-public class NinjaCassandraClusterProviderTest {
+public class NinjaProcessorsTest {
  
-    private NinjaProperties ninjaProperties;
-    
-    @Before
-    public void before() {
-        this.ninjaProperties = mock(NinjaProperties.class);
-    }
-    
+//    private NinjaProperties ninjaProperties;
+//    
+//    @Before
+//    public void before() {
+//        this.ninjaProperties = mock(NinjaProperties.class);
+//    }
+//    
 //    @Test
 //    public void buildCluster() {
 //        when(ninjaProperties.getStringArray("cassandra.contact_points"))

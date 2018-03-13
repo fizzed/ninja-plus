@@ -13,17 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package ninja.conf;
+package com.fizzed.ninja.executors;
 
-import ninja.utils.NinjaProperties;
-
-/**
- * Disables everything in classic by default.
- */
-public class NinjaLiteModule extends NinjaClassicModule {
-    
-    public NinjaLiteModule(NinjaProperties ninjaProperties) {
-        super(ninjaProperties, false);
-    }
+public interface NinjaExecutor extends Runnable {
+ 
+    void shutdown();
     
 }

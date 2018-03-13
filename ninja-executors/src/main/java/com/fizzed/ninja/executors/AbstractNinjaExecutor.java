@@ -13,17 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package ninja.conf;
+package com.fizzed.ninja.executors;
 
-import ninja.utils.NinjaProperties;
+import java.util.concurrent.atomic.AtomicBoolean;
 
-/**
- * Disables everything in classic by default.
- */
-public class NinjaLiteModule extends NinjaClassicModule {
-    
-    public NinjaLiteModule(NinjaProperties ninjaProperties) {
-        super(ninjaProperties, false);
+abstract public class AbstractNinjaExecutor implements NinjaExecutor {
+ 
+   protected final AtomicBoolean shutdown;
+   
+   public AbstractNinjaExecutor() {
+       this.shutdown = new AtomicBoolean(false);
+   }
+
+    @Override
+    public void shutdown() {
+        this.shutdown.set(true);
     }
     
 }

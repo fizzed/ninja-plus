@@ -13,17 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package ninja.conf;
+package services;
 
-import ninja.utils.NinjaProperties;
+import com.fizzed.ninja.executors.AbstractNinjaExecutor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-/**
- * Disables everything in classic by default.
- */
-public class NinjaLiteModule extends NinjaClassicModule {
+public class Consumer extends AbstractNinjaExecutor {
+    static private final Logger log = LoggerFactory.getLogger(Consumer.class);
     
-    public NinjaLiteModule(NinjaProperties ninjaProperties) {
-        super(ninjaProperties, false);
+    @Override
+    public void run() {
+        while (!this.shutdown.get()) {
+            try {
+                log.info("Doing something...");
+                Thread.sleep(1000L);
+            } catch (InterruptedException e) {
+                log.error("Interrupt", e);
+            }
+        }
     }
     
 }
