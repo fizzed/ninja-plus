@@ -32,6 +32,7 @@ abstract public class NinjaExecutors implements UncaughtExceptionHandler {
     protected final long gracefulStopTimeout;
     protected ExecutorService executors;
 
+    @SuppressWarnings("OverridableMethodCallInConstructor")
     public NinjaExecutors(
             Injector injector) {
         
@@ -80,13 +81,13 @@ abstract public class NinjaExecutors implements UncaughtExceptionHandler {
     @Start(order = 91)
     public void start() {
         if (!this.enabled) {
-            log.info("{} disabled (will not start)", this.getName());
+            log.info("Disabled (will not start)");
             return;
         }
         
         // already started?
         if (this.executors != null) {
-            log.warn("{} already started (will not start multiple times", this.getName());
+            log.warn("Already started (will not start multiple times");
             return;
         }
         
@@ -94,7 +95,7 @@ abstract public class NinjaExecutors implements UncaughtExceptionHandler {
         
         this.preStart();
 
-        log.info("{} starting {} threads", this.getName(), this.threads);
+        log.info("Starting {} threads", this.threads);
         this.executors = Executors.newFixedThreadPool(
             this.threads, new ThreadFactoryBuilder()
                 .setDaemon(true)
@@ -118,7 +119,7 @@ abstract public class NinjaExecutors implements UncaughtExceptionHandler {
         
         // already stopped?
         if (this.executors == null) {
-            log.warn("{} already stopped (will not stop multiple times", this.getName());
+            log.warn("Already stopped (will not stop multiple times");
             return;
         }
         
@@ -130,38 +131,37 @@ abstract public class NinjaExecutors implements UncaughtExceptionHandler {
                 this.stopNow();
             }
         } catch (InterruptedException e) {
-            log.warn("{} interrupted while shutting down...", e);
+            log.warn("Interrupted while shutting down...", e);
         } finally {
             this.executors = null;
-            log.info("{} stopped (in {})", this.getName(), timer);
+            log.info("Stopped (in {})", timer);
         }
     }
 
     protected void stopNow() {
-        log.info("{} immediately stopping...", this.getName());
+        log.info("Immediately stopping...");
         this.executors.shutdownNow();
     }
 
     protected void stopGracefully() throws InterruptedException {
-        log.info("{} gracefully stopping... (will wait up to {} ms)", this.getName(), this.gracefulStopTimeout);
+        log.info("Gracefully stopping... (will wait up to {} ms)", this.gracefulStopTimeout);
         this.executors.shutdown();
         
-        this.stopCurrentTasks();
+        this.stopExecuting();
         
         if (!this.executors.awaitTermination(this.gracefulStopTimeout, TimeUnit.MILLISECONDS)) {
-            log.warn("{} timed out gracefully stopping. Forcing stop now!", this.getName());
+            log.warn("Timed out gracefully stopping. Forcing stop now!");
             this.executors.shutdownNow();
         }
     }
     
-    protected void stopCurrentTasks() {
+    protected void stopExecuting() {
         // do nothing by default
     }
     
     @Override
     public void uncaughtException(Thread thread, Throwable e) {
-        log.error("{} with uncaught exception in thread {}",
-            this.getName(), thread.getName(), e);
+        log.error("Uncaught exception in thread {}!", thread.getName(), e);
     }
 
 }

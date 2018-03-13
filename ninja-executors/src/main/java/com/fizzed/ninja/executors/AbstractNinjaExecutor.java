@@ -16,18 +16,54 @@
 package com.fizzed.ninja.executors;
 
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicReference;
 
 abstract public class AbstractNinjaExecutor implements NinjaExecutor {
- 
-   protected final AtomicBoolean shutdown;
-   
-   public AbstractNinjaExecutor() {
-       this.shutdown = new AtomicBoolean(false);
-   }
 
+    protected final AtomicReference<Thread> executingThreadRef;
+    protected final AtomicBoolean shutdown;
+    protected final boolean interruptOnShutdown;
+
+    public AbstractNinjaExecutor() {
+        this(false);
+    }
+    
+    public AbstractNinjaExecutor(boolean interruptOnShutdown) {
+        this.executingThreadRef = new AtomicReference<>();
+        this.shutdown = new AtomicBoolean(false);
+        this.interruptOnShutdown = interruptOnShutdown;
+    }
+
+    @Override
+    public Thread getExecutingThread() {
+        return this.executingThreadRef.get();
+    }
+    
     @Override
     public void shutdown() {
         this.shutdown.set(true);
+        if (this.interruptOnShutdown) {
+            this.interrupt();
+        }
     }
+    
+    public void interrupt() {
+        final Thread executingThread = this.executingThreadRef.get();
+        if (executingThread != null) {
+            executingThread.interrupt();
+        }
+    }
+
+    @Override
+    public void run() {
+        this.executingThreadRef.set(Thread.currentThread());
+        try {
+            this.execute();
+        } finally {
+            this.executingThreadRef.set(null);
+        }
+    }
+    
+    abstract public void execute();
     
 }

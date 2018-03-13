@@ -21,9 +21,9 @@ import org.slf4j.LoggerFactory;
 
 public class Consumer extends AbstractNinjaExecutor {
     static private final Logger log = LoggerFactory.getLogger(Consumer.class);
-    
+
     @Override
-    public void run() {
+    public void execute() {
         while (!this.shutdown.get()) {
             try {
                 log.info("Doing something...");

@@ -16,42 +16,73 @@
 package com.fizzed.ninja.executors;
 
 import java.lang.Thread.UncaughtExceptionHandler;
-import java.util.function.Consumer;
+import java.util.concurrent.atomic.AtomicReference;
 
-class NinjaProcessor implements Runnable {
+public class NinjaProcessor extends AbstractNinjaExecutor {
     
     private final Long identifier;
-    private final NinjaExecutor executor;
+    private final Runnable runnable;
     private final long delayMillis;
-    private 
+    private volatile boolean delaying;
+    private final UncaughtExceptionHandler uncaughtExceptionHandler;
+    private final Runnable exitHandler;
 
     public NinjaProcessor(
             Long identifier,
-            NinjaExecutor executor,
+            Runnable runnable,
             long delayMillis,
             UncaughtExceptionHandler uncaughtExceptionHandler,
-            Consumer<Long> onExitHandler) {
+            Runnable exitHandler) {
+        super(false);
         this.identifier = identifier;
-        this.executor = executor;
+        this.runnable = runnable;
         this.delayMillis = delayMillis;
+        this.delaying = false;
+        this.uncaughtExceptionHandler = uncaughtExceptionHandler;
+        this.exitHandler = exitHandler;
     }
-    
-    
+
+    public Long getIdentifier() {
+        return identifier;
+    }
 
     @Override
-    public void run() {
+    public void shutdown() {
+        super.shutdown();
+        if (this.runnable instanceof NinjaExecutor) {
+            ((NinjaExecutor)this.runnable).shutdown();
+        }
+        if (this.delaying) {
+            this.interrupt();
+        }
+    }
+    
+    protected void delay(long millis) {
+        if (millis <= 0) {
+            return;
+        }
+        this.delaying = true;
         try {
-            if (this.delayMillis > 0) {
-                Thread.sleep(this.delayMillis);
-            }
-            this.executor.run();
-        } catch (Throwable t) {
-            processors.uncaughtException(Thread.currentThread(), t);
+            Thread.sleep(millis);
+        } catch (InterruptedException e) {
+            // ignore these
         } finally {
-            processors.processors.remove(this.identifier);
-            if (!executors.isShutdown()) {
-                // restart it
+            this.delaying = false;
+        }
+    }
+    
+    @Override
+    @SuppressWarnings("UseSpecificCatch")
+    public void execute() {
+        try {
+            this.delay(this.delayMillis);
+            if (!this.shutdown.get()) {
+                this.runnable.run();
             }
+        } catch (Throwable throwable) {
+            this.uncaughtExceptionHandler.uncaughtException(Thread.currentThread(), throwable);
+        } finally {
+            this.exitHandler.run();
         }
     }
     

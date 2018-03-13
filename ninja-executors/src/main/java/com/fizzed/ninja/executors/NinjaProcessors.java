@@ -1,53 +1,60 @@
 package com.fizzed.ninja.executors;
 
 import com.google.inject.Injector;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 
 abstract public class NinjaProcessors extends NinjaExecutors {
 
-    
     private final AtomicLong identifiers;
-    final ConcurrentHashMap<Long,NinjaProcessor> processors;
-    protected final long restartTimeout;
+    private final ConcurrentHashMap<Long,NinjaProcessor> processors;
+    protected final long initialDelay;
+    protected final long restartDelay;
     
     public NinjaProcessors(Injector injector) {
         super(injector);
         this.identifiers = new AtomicLong();
         this.processors = new ConcurrentHashMap<>();
-        this.restartTimeout = ninjaProperties.getIntegerWithDefault(
-            this.getConfigKey("restart_timeout"), 3000);
+        this.initialDelay = ninjaProperties.getIntegerWithDefault(
+            this.getConfigKey("initial_delay"), 0);
+        this.restartDelay = ninjaProperties.getIntegerWithDefault(
+            this.getConfigKey("restart_delay"), 3000);
     }
 
-    public Collection<
+    abstract public Class<? extends Runnable> getRunnableClass();
     
-    abstract public Class<? extends NinjaExecutor> getExecutorClass();
-    
-    protected void createProcessor() {
-        final Class<? extends NinjaExecutor> executorClass = this.getExecutorClass();
+    protected NinjaProcessor createProcessor(long delayMillis) {
+        final Class<? extends Runnable> runnableClass = this.getRunnableClass();
         final Long identifier = identifiers.incrementAndGet();
-        final NinjaExecutor executor = this.injector.getInstance(executorClass);
-        // wrap it so we can monitor when it finishes
-        final NinjaProcessor  wrappedExecutor = new NinjaProcessor(identifier, executor, this);
-        this.processors.put(identifier, wrappedExecutor);
-        this.executors.submit(wrappedExecutor);
+        final Runnable runnable = this.injector.getInstance(runnableClass);
+        return new NinjaProcessor(identifier, runnable, delayMillis, this, () -> {
+            this.processors.remove(identifier);
+            // if not shutting down then restart the processor
+            if (!this.executors.isShutdown()) {
+                log.warn("{} restarting processor in {} ms after uncaught exception",
+                    this.getName(), this.restartDelay);
+                NinjaProcessor restartedProcessor = this.createProcessor(this.restartDelay);
+                this.submitProcessor(restartedProcessor);
+            }
+        });
+    }
+    
+    protected void submitProcessor(NinjaProcessor processor) {
+        this.processors.put(processor.getIdentifier(), processor);
+        this.executors.submit(processor);
     }
     
     @Override
     protected void postStart() {
         for (int i = 0; i < this.threads; i++) {
-            this.createProcessor();
+            NinjaProcessor processor = this.createProcessor(this.initialDelay);
+            this.submitProcessor(processor);
         }
     }
     
     @Override
-    protected void stopCurrentTasks() {
-        List<NinjaProcessor> wrappedExecutors = new ArrayList<>(this.processors.values());
-        wrappedExecutors.forEach(wrappedExecutor -> {
-            wrappedExecutor.executor.shutdown();
-        });
+    protected void stopExecuting() {
+        this.processors.values().forEach(NinjaProcessor::shutdown);
     }
 
 }

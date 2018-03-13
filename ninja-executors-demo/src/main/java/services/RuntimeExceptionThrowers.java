@@ -15,7 +15,6 @@
  */
 package services;
 
-import com.fizzed.ninja.executors.NinjaExecutor;
 import com.fizzed.ninja.executors.NinjaProcessors;
 import com.google.inject.Injector;
 import javax.inject.Inject;
@@ -40,7 +39,7 @@ public class RuntimeExceptionThrowers extends NinjaProcessors {
     }
 
     @Override
-    public Class<? extends NinjaExecutor> getExecutorClass() {
+    public Class<? extends Runnable> getRunnableClass() {
         return RuntimeExceptionThrower.class;
     }
     

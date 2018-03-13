@@ -17,6 +17,8 @@ package com.fizzed.ninja.executors;
 
 public interface NinjaExecutor extends Runnable {
  
+    Thread getExecutingThread();
+    
     void shutdown();
     
 }

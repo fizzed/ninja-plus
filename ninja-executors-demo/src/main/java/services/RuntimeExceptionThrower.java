@@ -23,7 +23,7 @@ public class RuntimeExceptionThrower extends AbstractNinjaExecutor {
     static private final Logger log = LoggerFactory.getLogger(RuntimeExceptionThrower.class);
     
     @Override
-    public void run() {
+    public void execute() {
         while (!this.shutdown.get()) {
             log.info("Doing something...");
             try {
