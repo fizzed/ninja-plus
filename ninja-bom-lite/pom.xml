@@ -1,0 +1,108 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>com.fizzed</groupId>
+    <artifactId>ninja-bom-lite</artifactId>
+    <name>ninja-bom-lite</name>
+    <packaging>pom</packaging>
+    <version>6.2.2-2-SNAPSHOT</version>
+
+    <parent>
+        <groupId>com.fizzed</groupId>
+        <artifactId>ninja-plus</artifactId>
+        <version>6.2.2-2-SNAPSHOT</version>
+    </parent>
+    
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.ninjaframework</groupId>
+                <artifactId>ninja-core</artifactId>
+                <version>${ninja.version}</version>
+                <exclusions>
+                    <!-- freemarker -->
+                    <exclusion>
+                        <groupId>org.freemarker</groupId>
+                        <artifactId>freemarker-gae</artifactId>
+                    </exclusion>
+                    <!-- hibernate -->
+                    <exclusion>
+                        <groupId>org.hibernate</groupId>
+                        <artifactId>hibernate-entitymanager</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.hibernate</groupId>
+                        <artifactId>hibernate-c3p0</artifactId>
+                    </exclusion>
+                    <!-- memcached -->
+                    <exclusion>
+                        <groupId>net.spy</groupId>
+                        <artifactId>spymemcached</artifactId>
+                    </exclusion>
+                    <!-- ehcache -->
+                    <exclusion>
+                        <groupId>net.sf.ehcache</groupId>
+                        <artifactId>ehcache-core</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+
+            <dependency>
+                <groupId>org.ninjaframework</groupId>
+                <artifactId>ninja-standalone</artifactId>
+                <version>${ninja.version}</version>
+            </dependency>
+            
+            <dependency>
+                <groupId>org.ninjaframework</groupId>
+                <artifactId>ninja-test-utilities</artifactId>
+                <version>${ninja.version}</version>
+                <exclusions>
+                    <exclusion>
+                         <groupId>org.ninjaframework</groupId>
+                        <artifactId>ninja-standalone</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.seleniumhq.selenium</groupId>
+                        <artifactId>selenium-api</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.seleniumhq.selenium</groupId>
+                        <artifactId>selenium-support</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+            
+            <dependency>
+                <groupId>org.ninjaframework</groupId>
+                <artifactId>ninja-maven-plugin</artifactId>
+                <version>${ninja.version}</version>
+            </dependency>
+            
+            <dependency>
+                <groupId>com.fizzed</groupId>
+                <artifactId>ninja-extras</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            
+            <dependency>
+                <groupId>com.fizzed</groupId>
+                <artifactId>ninja-executors</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            
+            <dependency>
+                <groupId>com.fizzed</groupId>
+                <artifactId>ninja-undertow</artifactId>
+                <version>${ninja-undertow.version}</version>
+            </dependency>
+            
+            <dependency>
+                <groupId>com.google.guava</groupId>
+                <artifactId>guava</artifactId>
+                <version>${guava.version}</version>
+            </dependency>
+            
+        </dependencies>
+    </dependencyManagement>
+    
+</project>

@@ -13,17 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package ninja.conf;
+package com.fizzed.ninja.conf;
 
+import ninja.conf.NinjaClassicModule;
 import ninja.utils.NinjaProperties;
 
 /**
- * Disables everything in classic by default.
+ * Matches what is in 'ninja-bom-atom' bill of materials.
  */
-public class NinjaLiteModule extends NinjaClassicModule {
+public class NinjaAtomModule extends NinjaClassicModule {
     
-    public NinjaLiteModule(NinjaProperties ninjaProperties) {
+    @SuppressWarnings("OverridableMethodCallInConstructor")
+    public NinjaAtomModule(NinjaProperties ninjaProperties) {
         super(ninjaProperties, false);
+        this.json(true);
     }
     
 }
