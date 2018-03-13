@@ -4,12 +4,12 @@
     <artifactId>ninja-bom-lite</artifactId>
     <name>ninja-bom-lite</name>
     <packaging>pom</packaging>
-    <version>6.2.2-2-SNAPSHOT</version>
+    <version>6.2.2-2</version>
 
     <parent>
         <groupId>com.fizzed</groupId>
         <artifactId>ninja-plus</artifactId>
-        <version>6.2.2-2-SNAPSHOT</version>
+        <version>6.2.2-2</version>
     </parent>
     
     <dependencyManagement>
